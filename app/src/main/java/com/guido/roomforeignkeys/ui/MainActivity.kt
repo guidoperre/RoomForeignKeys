@@ -2,6 +2,7 @@ package com.guido.roomforeignkeys.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.guido.roomforeignkeys.R
@@ -20,29 +21,31 @@ class MainActivity : AppCompatActivity() {
         //Enlazo el View Model
         inicializarViewModel()
 
-        //Las dos funciones que siguen estan solamente para insertar datos en la base
 
         //Creo alumnos y los inserto
         //crearAlumno()
 
-        //Creo cursos y los inserto
-        //crearCursos()
+        //Creo un alumno con cursos y lo inserto
+        crearAlumnoConCursos()
     }
 
     private fun inicializarViewModel(){
         viewModel = MainActivityViewModel(application)
 
-        viewModel.getAlumnos().observe(this, Observer{
+        viewModel.getAlumnos().observe(this, {
             if (it != null){
                 for (alumno in it){
-                    //Esta linea esta mas que nada para tener un breakpoint el debug
-                    Toast.makeText(this,alumno.datos.nombre,Toast.LENGTH_SHORT).show()
+                    //Esta linea esta mas que nada para tener un breakpoint en el debug
+                    Log.i("ALUMNO",alumno.datos.nombre +" " + alumno.datos.apellido)
+
+                    //Descomentar solo cuando el alumno Guido Perre esta creado
+                    borrarAlumno(alumno.datos)
                 }
             }
         })
     }
 
-    //Ejecutar primero que cursos siempre
+    //Creo los datos del alumno
     private fun crearAlumno(){
         val alumnosDatos:ArrayList<AlumnoDatos> = ArrayList()
 
@@ -54,16 +57,26 @@ class MainActivity : AppCompatActivity() {
             viewModel.insertAlumno(alumnoDatos)
     }
 
-    //No ejecutar hasta que ya esten los alumnos creados o posiblemente no funcionara
-    private fun crearCursos(){
-        val cursos:ArrayList<Cursos> = ArrayList()
+    //Creo un alumno con sus datos y sus objetos correspondientes
+    private fun crearAlumnoConCursos(){
+        val alumnos:ArrayList<Alumno> = ArrayList()
 
-        cursos.add(Cursos(0L,1L,"HTML","Facil"))
-        cursos.add(Cursos(0L,2L,"Android","Medio"))
-        cursos.add(Cursos(0L,3L,"Java","Dificil"))
+        val alumnoDatos = AlumnoDatos(0L,"Jorge","Fulanito")
+        val cursos: ArrayList<Cursos> = ArrayList()
+        cursos.add(Cursos(0L,0L,"Java","Dificil"))
+        cursos.add(Cursos(0L,0L,"Android","Medio"))
 
-        for (curso in cursos)
-            viewModel.insertCurso(curso)
+       alumnos.add(Alumno(alumnoDatos,cursos))
+
+        for (alumno in alumnos)
+            viewModel.insertAlumnoCompleto(alumno)
+    }
+
+    //Borro un alumno y todos los objetos relacionados a el
+    private fun borrarAlumno(alumnoDatos:AlumnoDatos){
+        //Borro al alumno con apellido "Perre"
+        if (alumnoDatos.apellido == "Perre")
+            viewModel.deleteAlumno(alumnoDatos)
     }
 
 }

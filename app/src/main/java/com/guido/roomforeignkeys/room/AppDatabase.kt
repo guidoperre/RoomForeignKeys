@@ -10,14 +10,13 @@ import com.guido.roomforeignkeys.entities.Cursos
 import com.guido.roomforeignkeys.room.dao.AlumnoDAO
 
 
-@Database(entities = [AlumnoDatos::class,Cursos::class],version = 2, exportSchema = false)
+@Database(entities = [AlumnoDatos::class,Cursos::class],version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     //Dao
     abstract fun alumnoDAO() : AlumnoDAO
 
     companion object {
-
         private const val DATABASE_NAME = "rfk-test-db"
 
         //La anotacion volatile es para que no la cachee
@@ -33,13 +32,7 @@ abstract class AppDatabase : RoomDatabase() {
 
         private fun buildDatabase(context: Context): AppDatabase {
             return Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
-                //Agrego el callback para pre popular la base de datos cuando inicia
-                .addCallback(object : RoomDatabase.Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-                        //Aca se pone el worker para cargar la info inicial
-                    }
-                })
+                .addCallback(object : RoomDatabase.Callback() {})
                 .fallbackToDestructiveMigration()
                 .build()
         }

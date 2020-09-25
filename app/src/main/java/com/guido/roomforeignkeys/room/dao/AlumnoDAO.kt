@@ -1,10 +1,7 @@
 package com.guido.roomforeignkeys.room.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
+import androidx.room.*
 import com.guido.roomforeignkeys.entities.Alumno
 import com.guido.roomforeignkeys.entities.AlumnoDatos
 import com.guido.roomforeignkeys.entities.Cursos
@@ -17,11 +14,13 @@ interface AlumnoDAO {
     fun getAll(): LiveData<List<Alumno>>
 
     @Insert
-    @Transaction
-    fun insertarAlumnoDatos(alumnoDatos: AlumnoDatos)
+    fun insertarAlumnoDatos(alumnoDatos: AlumnoDatos):Long
 
     @Insert
+    fun insertarCurso(cursos: Cursos):Long
+
+    @Delete
     @Transaction
-    fun insertarCurso(cursos: Cursos)
+    fun borrarAlumno(alumnoDatos: AlumnoDatos)
 
 }

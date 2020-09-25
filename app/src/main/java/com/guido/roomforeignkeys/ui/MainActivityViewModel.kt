@@ -26,8 +26,11 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         alumnoRepository.insertAlumno(alumnoDatos)
     }
 
-    fun insertCurso(curso: Cursos){
-        alumnoRepository.insertCurso(curso)
+    fun insertAlumnoCompleto(alumno:Alumno){
+        alumnoRepository.insertAlumnoCompleto(alumno)
     }
 
+    fun deleteAlumno(alumnoDatos: AlumnoDatos){
+        alumnoRepository.deleteAlumno(alumnoDatos)
+    }
 }
