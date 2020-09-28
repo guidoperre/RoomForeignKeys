@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
         //Enlazo el View Model
         inicializarViewModel()
 
-
         //Creo alumnos y los inserto
         //crearAlumno()
 
@@ -39,7 +38,7 @@ class MainActivity : AppCompatActivity() {
                     Log.i("ALUMNO",alumno.datos.nombre +" " + alumno.datos.apellido)
 
                     //Descomentar solo cuando el alumno Guido Perre esta creado
-                    borrarAlumno(alumno.datos)
+                    //borrarAlumno(alumno.datos)
                 }
             }
         })
@@ -61,13 +60,14 @@ class MainActivity : AppCompatActivity() {
     private fun crearAlumnoConCursos(){
         val alumnos:ArrayList<Alumno> = ArrayList()
 
-        val alumnoDatos = AlumnoDatos(0L,"Jorge","Fulanito")
+        val alumnoDatos = AlumnoDatos(0L,"Guido","Jorl")
         val cursos: ArrayList<Cursos> = ArrayList()
         cursos.add(Cursos(0L,0L,"Java","Dificil"))
         cursos.add(Cursos(0L,0L,"Android","Medio"))
 
-       alumnos.add(Alumno(alumnoDatos,cursos))
+        alumnos.add(Alumno(alumnoDatos,cursos))
 
+        //Simulo la situacion en la que tenga un array de alumnos
         for (alumno in alumnos)
             viewModel.insertAlumnoCompleto(alumno)
     }

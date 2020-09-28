@@ -66,8 +66,6 @@ class AlumnoRepository() {
                             Log.e("INSERT ALUMNO COMPLETO", "No se pudo insertar a la base de datos un curso correspondiente al alumno " + alumno.datos.nombre + " " + alumno.datos.apellido)
                         }
                     }
-
-                //Se repitiria lo anterior para cada uno de los objetos a insertar correspondientes
             }
         }
     }
