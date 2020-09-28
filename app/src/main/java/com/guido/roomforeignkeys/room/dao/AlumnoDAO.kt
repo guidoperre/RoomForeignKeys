@@ -2,22 +2,44 @@ package com.guido.roomforeignkeys.room.dao
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import com.guido.roomforeignkeys.entities.Alumno
-import com.guido.roomforeignkeys.entities.AlumnoDatos
 import com.guido.roomforeignkeys.entities.Cursos
-import com.guido.roomforeignkeys.repositories.AlumnoRepository
 import java.lang.Exception
 
 @Dao
 interface AlumnoDAO {
 
     @Query("SELECT * FROM alumno")
+    fun getAlumno(): List<Alumno>
+
+    @Query("SELECT * FROM cursos WHERE id_alumno=:idAlumno")
+    fun getCurso(idAlumno:Long): List<Cursos>
+
     @Transaction
-    fun getAll(): LiveData<List<Alumno>>
+    fun getAlumnoCompleto(): List<Alumno>? {
+        var alumnos:List<Alumno>? = null
+
+        try {
+            alumnos = getAlumno()
+        }catch (e: Exception){
+            Log.e("GET ALUMNO COMPLETO", "No se pudo traer de la base de datos")
+        }
+
+        if (alumnos != null)
+            for (alumno in alumnos)
+                try {
+                    alumno.cursos = getCurso(alumno.id)
+                }catch (e:Exception){
+                    Log.e("GET ALUMNO COMPLETO", "No se pudieron traer de la base de datos los cursos del alumno " + alumno.nombre + " " + alumno.apellido)
+                }
+
+        return alumnos
+    }
 
     @Insert
-    fun insertarAlumnoDatos(alumnoDatos: AlumnoDatos):Long
+    fun insertarAlumno(alumno: Alumno):Long
 
     @Insert
     fun insertarCurso(cursos: Cursos):Long
@@ -29,9 +51,9 @@ interface AlumnoDAO {
 
         //Inserto los datos del alumno
         try {
-            idAlumno = insertarAlumnoDatos(alumno.datos)
+            idAlumno = insertarAlumno(alumno)
         }catch (e: Exception){
-            Log.e("INSERT ALUMNO COMPLETO", "No se pudo insertar a la base de datos el alumno " + alumno.datos.nombre + " " + alumno.datos.apellido)
+            Log.e("INSERT ALUMNO COMPLETO", "No se pudo insertar a la base de datos el alumno " + alumno.nombre + " " + alumno.apellido)
         }
 
         //Inserto los cursos
@@ -42,7 +64,7 @@ interface AlumnoDAO {
                 try {
                     insertarCurso(curso)
                 }catch (e: Exception){
-                    Log.e("INSERT ALUMNO COMPLETO", "No se pudo insertar a la base de datos un curso correspondiente al alumno " + alumno.datos.nombre + " " + alumno.datos.apellido)
+                    Log.e("INSERT ALUMNO COMPLETO", "No se pudo insertar a la base de datos un curso correspondiente al alumno " + alumno.nombre + " " + alumno.apellido)
                 }
             }
 
@@ -51,6 +73,6 @@ interface AlumnoDAO {
 
     @Delete
     @Transaction
-    fun borrarAlumno(alumnoDatos: AlumnoDatos)
+    fun borrarAlumno(alumno: Alumno)
 
 }

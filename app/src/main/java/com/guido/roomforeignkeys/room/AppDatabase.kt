@@ -4,13 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.guido.roomforeignkeys.entities.AlumnoDatos
+import com.guido.roomforeignkeys.entities.Alumno
 import com.guido.roomforeignkeys.entities.Cursos
 import com.guido.roomforeignkeys.room.dao.AlumnoDAO
 
 
-@Database(entities = [AlumnoDatos::class,Cursos::class],version = 3, exportSchema = false)
+@Database(entities = [Alumno::class,Cursos::class],version = 4, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     //Dao

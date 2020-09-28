@@ -1,19 +1,15 @@
 package com.guido.roomforeignkeys.repositories
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.guido.roomforeignkeys.entities.Alumno
-import com.guido.roomforeignkeys.entities.AlumnoDatos
 import com.guido.roomforeignkeys.entities.Cursos
 import com.guido.roomforeignkeys.room.AppDatabase
 import com.guido.roomforeignkeys.room.dao.AlumnoDAO
 import kotlinx.coroutines.*
-import java.lang.Exception
 
 class AlumnoRepository() {
-
-    private lateinit var dataList: LiveData<List<Alumno>>
 
     private val viewModelJob = Job()
     private val uiScope =  CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -21,22 +17,32 @@ class AlumnoRepository() {
 
     companion object{
         private lateinit var alumnoDAO: AlumnoDAO
+        private var dataList: MutableLiveData<List<Alumno>> = MutableLiveData()
     }
 
     constructor(application: Application):this(){
         val database: AppDatabase = AppDatabase.getDatabase(application)
         alumnoDAO = database.alumnoDAO()
-        dataList = alumnoDAO.getAll()
+        getAlumno()
     }
 
-    fun get(): LiveData<List<Alumno>>{
+    fun get(): MutableLiveData<List<Alumno>>{
         return dataList
     }
 
-    fun insertAlumno(alumnoDatos: AlumnoDatos) {
+    private fun getAlumno(){
+        uiScope.launch {
+            val response = withContext(Dispatchers.IO) {
+                return@withContext alumnoDAO.getAlumnoCompleto()
+            }
+            dataList.value = response
+        }
+    }
+
+    fun insertAlumno(alumno: Alumno) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                alumnoDAO.insertarAlumnoDatos(alumnoDatos)
+                alumnoDAO.insertarAlumno(alumno)
             }
         }
     }
@@ -53,27 +59,15 @@ class AlumnoRepository() {
     fun insertAlumnoCompleto(alumno:Alumno){
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                val idAlumno = alumnoDAO.insertarAlumnoDatos(alumno.datos)
-
-                //Inserto los cursos
-                val cursosAlumno = alumno.cursos
-                if (cursosAlumno != null)
-                    for (curso in cursosAlumno){
-                        curso.idAlumno = idAlumno
-                        try {
-                            alumnoDAO.insertarCurso(curso)
-                        }catch (e:Exception){
-                            Log.e("INSERT ALUMNO COMPLETO", "No se pudo insertar a la base de datos un curso correspondiente al alumno " + alumno.datos.nombre + " " + alumno.datos.apellido)
-                        }
-                    }
+                alumnoDAO.insertarAlumnoCompleto(alumno)
             }
         }
     }
 
-    fun deleteAlumno(alumnoDatos:AlumnoDatos){
+    fun deleteAlumno(alumno:Alumno){
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                alumnoDAO.borrarAlumno(alumnoDatos)
+                alumnoDAO.borrarAlumno(alumno)
             }
         }
     }
