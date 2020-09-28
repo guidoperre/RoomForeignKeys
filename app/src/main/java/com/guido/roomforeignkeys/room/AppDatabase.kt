@@ -6,10 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.guido.roomforeignkeys.entities.Alumno
 import com.guido.roomforeignkeys.entities.Cursos
+import com.guido.roomforeignkeys.entities.RelacionAlumnoCursos
 import com.guido.roomforeignkeys.room.dao.AlumnoDAO
 
 
-@Database(entities = [Alumno::class,Cursos::class],version = 4, exportSchema = false)
+@Database(entities = [Alumno::class,Cursos::class,RelacionAlumnoCursos::class],version = 5, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     //Dao

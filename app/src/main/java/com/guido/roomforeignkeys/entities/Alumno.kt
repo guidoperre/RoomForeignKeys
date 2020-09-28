@@ -10,9 +10,9 @@ data class Alumno (
     @PrimaryKey(autoGenerate = true)
     var id:Long = 0L,
 
-    var nombre:String,
+    var nombre:String = "",
 
-    var apellido:String,
+    var apellido:String = "",
 
     @Ignore
     var cursos: List<Cursos>? = null

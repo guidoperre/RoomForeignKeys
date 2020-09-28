@@ -18,13 +18,17 @@ class MainActivity : AppCompatActivity() {
         //Enlazo el View Model
         inicializarViewModel()
 
+        //Creo cursos y los inserto
+        //crearCursos()
+
         //Creo alumnos y los inserto
         //crearAlumno()
 
         //Creo un alumno con cursos y lo inserto
-        //crearAlumnoConCursos()
+        crearAlumnoConCursos()
     }
 
+    //Aca adentro esta la funcion de borrar alumno
     private fun inicializarViewModel(){
         viewModel = MainActivityViewModel(application)
 
@@ -34,8 +38,10 @@ class MainActivity : AppCompatActivity() {
                     //Esta linea esta para tener un breakpoint en el debug
                     Log.i("ALUMNO",alumno.nombre +" " + alumno.apellido)
 
-                    //Descomentar solo cuando el alumno Guido Jorl esta creado
-                    //borrarAlumno(alumno)
+                    //Descomentar solo cuando el alumno Guido Perre esta creado
+                    //Borro un alumno y todos los objetos relacionados a el
+                    //if (alumno.apellido == "Perre")
+                    //   viewModel.deleteAlumno(alumno)
                 }
             }
         })
@@ -45,21 +51,32 @@ class MainActivity : AppCompatActivity() {
     private fun crearAlumno(){
         val alumnosDatos:ArrayList<Alumno> = ArrayList()
 
-        alumnosDatos.add(Alumno(0L,"Guido","Perre",null))
-        alumnosDatos.add(Alumno(0L,"Juan","Fulanito",null))
+        alumnosDatos.add(Alumno(0L,"Fulanito","Rodriguez",null))
+        alumnosDatos.add(Alumno(0L,"Juan","Forh",null))
         alumnosDatos.add(Alumno(0L,"Pedro","Pedron",null))
 
         for (alumnoDatos in alumnosDatos)
             viewModel.insertAlumno(alumnoDatos)
     }
 
+    //Creo los cursos
+    private fun crearCursos(){
+        val cursos: ArrayList<Cursos> = ArrayList()
+        cursos.add(Cursos(0L,"CSS-HTML","Facil"))
+        cursos.add(Cursos(0L,"Android","Medio"))
+        cursos.add(Cursos(0L,"Java","Dificil"))
+
+        for (curso in cursos)
+            viewModel.insertCurso(curso)
+    }
+
     //Creo un alumno con sus datos y sus objetos correspondientes
     private fun crearAlumnoConCursos(){
         val cursos: ArrayList<Cursos> = ArrayList()
-        cursos.add(Cursos(0L,0L,"Java","Dificil"))
-        cursos.add(Cursos(0L,0L,"Android","Medio"))
+        cursos.add(Cursos(0L,"Kotlin","Dificil"))
+        cursos.add(Cursos(0L,"PHP","Medio"))
 
-        val alumno = Alumno(0L,"Guido","Jorl",cursos)
+        val alumno = Alumno(0L,"Guido","Perre",cursos)
 
         val alumnos:ArrayList<Alumno> = ArrayList()
 
@@ -70,11 +87,6 @@ class MainActivity : AppCompatActivity() {
             viewModel.insertAlumnoCompleto(alm)
     }
 
-    //Borro un alumno y todos los objetos relacionados a el
-    private fun borrarAlumno(alumno:Alumno){
-        //Borro al alumno con apellido "Perre"
-        if (alumno.apellido == "Jorl")
-            viewModel.deleteAlumno(alumno)
-    }
+
 
 }
