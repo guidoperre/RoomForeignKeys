@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         //crearAlumno()
 
         //Creo un alumno con cursos y lo inserto
-        crearAlumnoConCursos()
+        //crearAlumnoConCursos()
     }
 
     //Aca adentro esta la funcion de borrar alumno
@@ -86,7 +86,5 @@ class MainActivity : AppCompatActivity() {
         for (alm in alumnos)
             viewModel.insertAlumnoCompleto(alm)
     }
-
-
 
 }

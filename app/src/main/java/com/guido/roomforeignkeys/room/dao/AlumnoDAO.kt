@@ -23,8 +23,10 @@ interface AlumnoDAO {
     @Insert
     fun insertarAlumnoCurso(alumnoCursos: RelacionAlumnoCursos):Long
 
-    @Delete
-    @Transaction
-    fun borrarAlumno(alumno: Alumno)
+    @Query("DELETE FROM alumno WHERE id=:idAlumno")
+    fun borrarAlumno(idAlumno: Long)
+
+    @Query("DELETE FROM `alumno-cursos` WHERE id=:idAlumno")
+    fun borrarRelacionAlumnoCurso(idAlumno: Long)
 
 }

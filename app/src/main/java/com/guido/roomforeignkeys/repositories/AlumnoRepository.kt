@@ -40,7 +40,7 @@ class AlumnoRepository(){
             val response = withContext(Dispatchers.IO) {
                 var alumnos:List<Alumno>? = null
 
-                //Se hace una Transaction para que en caso de no poder insertar algun datos, que no se inserte ninguno
+                //Se hace una Transaction para que en caso de no poder traer algun dato, que no se traiga ninguno
                 database.runInTransaction(Runnable {
                     var aux:List<Alumno>? = null
                     try {
@@ -129,12 +129,28 @@ class AlumnoRepository(){
         }
     }
 
-    //TODO: Hacerlo manual
     //Borra al alumno y sus tablas relacionadas
     fun deleteAlumno(alumno:Alumno){
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                alumnoDAO.borrarAlumno(alumno)
+                //Se hace una Transaction para que en caso de no poder insertar algun datos, que no se inserte ninguno
+                database.runInTransaction(Runnable {
+                    //Borro los datos del alumno
+                    try {
+                        alumnoDAO.borrarAlumno(alumno.id)
+                    }catch (e: Exception){
+                        Log.e("INSERT ALUMNO COMPLETO", "No se pudo borrar de la base de datos al alumno " + alumno.nombre + " " + alumno.apellido)
+                    }
+
+                    //Checkeo si existe alguna relacion y la borro
+                    try {
+                        alumnoDAO.borrarRelacionAlumnoCurso(alumno.id)
+                    }catch (e: Exception){
+                        Log.e("INSERT ALUMNO COMPLETO", "No se pudo borrar de la base de datos la relacion del alumno " + alumno.nombre + " " + alumno.apellido)
+                    }
+
+                    //Se repitiria lo anterior para cada uno de los objetos a insertar correspondientes
+                })
             }
         }
     }
